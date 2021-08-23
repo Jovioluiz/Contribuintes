@@ -54,7 +54,7 @@ procedure TForm2.Button1Click(Sender: TObject);
 var
   valor: Double;
 begin
-
+  FListaContribuintes.Clear;
   try
     if radioGroup.ItemIndex = -1 then
       raise Exception.Create('Selecione um tipo de contribuinte');
@@ -65,31 +65,24 @@ begin
         FContribuinte := TEmpresaSimples.Create
       else
         FContribuinte := TPessoaJuridica.Create;
-      FContribuinte.Nome := edtNome.Text;
-      FContribuinte.RendaAnual := edtRendaAnual.ValueCurrency;
       (FContribuinte as TPessoaJuridica).NumeroEmpregados := StrToInt(edtNrEmpregados.Text);
-      valor := FContribuinte.Taxa;
     end
     else
     begin
       FContribuinte := TPessoaFisica.Create;
-      FContribuinte.Nome := edtNome.Text;
-      FContribuinte.RendaAnual := edtRendaAnual.ValueCurrency;
       (FContribuinte as TPessoaFisica).DespesasMedicas := edtDespesasMedicas.ValueCurrency;
-      valor := FContribuinte.Taxa;
     end;
 
+    FContribuinte.Nome := edtNome.Text;
+    FContribuinte.RendaAnual := edtRendaAnual.ValueCurrency;
+    valor := FContribuinte.Taxa;
     FListaContribuintes.Add(FContribuinte);
 
+    memo.Lines.Clear;
     for var lista in FListaContribuintes do
     begin
       memo.Lines.Add(lista.ToString + valor.ToString);
     end;
-
-
-//
-//    memo.Clear;
-//    memo.Lines.Add(FContribuinte.ToString + valor.ToString);
   
   finally
     FContribuinte.Free;
